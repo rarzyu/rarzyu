@@ -20,7 +20,7 @@
 
 |title|value|
 |--|--|
-|**language**|![language-icon](https://skillicons.dev/icons?i=html,css,js,ts,java,kotlin,swift,python)|
+|**language**|![language-icon](https://skillicons.dev/icons?i=html,css,js,ts,java,kotlin,swift,python,dart)|
 |**framework,library etc**|![framework-library-icon](https://skillicons.dev/icons?i=flutter,react,angular,spring,jquery)|
 |**infrastructure**|![infrastructure-icon](https://skillicons.dev/icons?i=aws)|
 |**tool etc**|![tool-icon](https://skillicons.dev/icons?i=github,gitlab,vscode,figma,notion)|

@@ -2,21 +2,31 @@
 [![github-follower](https://komarev.com/ghpvc/?username=rarzyu)](https://github.com/rarzyu)
 [![twitter-follower](https://img.shields.io/twitter/follow/rarzyu1217?style=flat&logo=x)](https://x.com/rarzyu1217)
 
-- [Recent Activities](#recent-activities)
-- [Language,Skills](#languageskills)
-- [Achievement](#achievement)
+- [📱 Products](#-products)
+    - [Projects](#projects)
+    - [Blog](#blog)
+- [🛠 Language,Skills](#-languageskills)
+- [📊 GitHub Activity](#-github-activity)
+- [📬 Contact](#-contact)
 
 
-## Recent Activities
-![stats](https://github-readme-stats.vercel.app/api?username=rarzyu&count_private=true&show_icons=true&show_icons=true&theme=tokyonight)
+## 📱 Products
+### Projects
+個人開発したアプリなどは以下をご確認ください。
 
-![streak-stats](https://github-readme-streak-stats.herokuapp.com/?user=rarzyu&count_private=true&theme=tokyonight&hide_border=true)
+[![プロジェクト一覧](https://img.shields.io/badge/プロジェクト一覧-2ea44f?style=for-the-badge)](https://rarzyu.com/projects/)
 
-[![activity-graph](https://github-readme-activity-graph.vercel.app/graph?username=rarzyu&theme=github-dark-dimmed&count_private=true&custom_title=Contribution%20Graph%20in%20the%20last%2031%20days&hide_border=true)](https://github.com/Ashutosh00710/github-readme-activity-graph)
+### Blog
+技術記事やFIRE関連の情報を発信しています。
 
-![summary-cards](https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=rarzyu&count_private=true&theme=tokyonight)
+[![rarzyu.com](https://img.shields.io/badge/rarzyu.com-2ea44f?style=for-the-badge)](https://rarzyu.com)
 
-## Language,Skills
+- プログラミングチュートリアル
+- 個人開発のノウハウ
+- FIRE戦略・資産形成
+
+
+## 🛠 Language,Skills
 
 |title|value|
 |--|--|
@@ -25,12 +35,14 @@
 |**infrastructure**|![infrastructure-icon](https://skillicons.dev/icons?i=aws)|
 |**tool etc**|![tool-icon](https://skillicons.dev/icons?i=github,gitlab,vscode,figma,notion)|
 
-![top-langs](https://github-readme-stats.vercel.app/api/top-langs/?username=rarzyu&layout=compact&count_private=true&show_icons=true&theme=tokyonight)
 
-![summary-cards-by-repo](https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=rarzyu&count_private=true&theme=transparent)
+## 📊 GitHub Activity
 
-![summary-cards-by-commit](https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=rarzyu&count_private=true&theme=transparent)
+[![activity-graph](https://github-readme-activity-graph.vercel.app/graph?username=rarzyu&theme=github-dark-dimmed&count_private=true&custom_title=Contribution%20Graph%20in%20the%20last%2031%20days&hide_border=true)](https://github.com/Ashutosh00710/github-readme-activity-graph)
+
+![summary-cards](https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=rarzyu&count_private=true&theme=tokyonight)
 
 
-## Achievement
-![trophy](https://github-profile-trophy.vercel.app/?username=rarzyu&count_private=true&theme=tokyonight)
+## 📬 Contact
+- X (Twitter): [@rarzyu1217](https://x.com/rarzyu1217)
+- Blog: [rarzyu.com](https://rarzyu.com)

@@ -23,7 +23,7 @@
   - [永続化 — AsyncStorage](#永続化--asyncstorage)
   - [i18n — i18next + react-i18next](#i18n--i18next--react-i18next)
   - [エラー監視 — Sentry React Native（`@sentry/react-native`）](#エラー監視--sentry-react-nativesentryreact-native)
-  - [広告 / 課金 — AdMob + `react-native-iap`](#広告--課金--admob--react-native-iap)
+  - [広告 / 課金 — AdMob + RevenueCat](#広告--課金--admob--revenuecat)
   - [Webサイト（LP） — Astro + Tailwind + Cloudflare Pages](#webサイトlp--astro--tailwind--cloudflare-pages)
 - [4. 設計で意識したこと](#4-設計で意識したこと)
   - [4.1 タイマーロジック：状態とフェーズ遷移を1か所に集約](#41-タイマーロジック状態とフェーズ遷移を1か所に集約)
@@ -90,8 +90,8 @@
 ### エラー監視 — Sentry React Native（`@sentry/react-native`）
 - **理由**：production限定で送信 / 画面遷移トレース / `getSentryExpoConfig` でMetro統合
 
-### 広告 / 課金 — AdMob + `react-native-iap`
-- **理由**：AdMob（バナー / インタースティシャル / リワード）で無料プランを収益化 / IAPでApple・Googleのストア課金に対応し、プレミアム購入で広告非表示
+### 広告 / 課金 — AdMob + RevenueCat
+- **理由**：AdMob（バナー / インタースティシャル / リワード）で無料プランを収益化 / RevenueCat でApple・Googleのストア課金に対応し、買い切りのプレミアム購入で広告非表示
 
 ### Webサイト（LP） — Astro + Tailwind + Cloudflare Pages
 - **理由**：LP・利用規約・お問い合わせ（Web3Forms）を静的サイト（SSG・8言語）で配信 / 無料ホスティング
@@ -138,8 +138,8 @@ QueryClient（あれば）
 
 ## 6. 運用で見ていること
 
-- **エラー監視**：[Sentry React Native](https://sentry.io/organizations/rarzyu/issues/) で production ビルドのみクラッシュ・エラーを収集
-- **ストア審査対応**：プライバシーポリシー・利用規約・特商法をWebサイト（nomow.rarzyu.com）側で公開
+- **エラー監視**：Sentry React Native で production ビルドのみクラッシュ・エラーを収集
+- **ストア審査対応**：プライバシーポリシー・利用規約・特商法をWebサイト（pomo.rarzyu.com）側で公開
 - **ユーザーフィードバック**：Webサイトのお問い合わせフォーム（Web3Forms）で受け付け
 - **広告 / 課金の収益**：AdMob / App Store Connect / Google Play Console で確認
 - **マーケティング**：ASO分析・ストア掲載文言・施策を `docs/marketing` で管理
@@ -154,13 +154,8 @@ QueryClient（あれば）
 ## 8. 今後改善したいこと
 
 - **バックグラウンドでのタイマー精度改善**：現状は `setInterval` ベースのため、バックグラウンド復帰時に経過時間がズレる。`Date.now()` 基準の差分再計算へ寄せる
-- テストコードの実装
-  - 品質の担保のためにも、テストコードを実装する
-- ツールの導入
-  - PostHog
-    - ユーザーの行動を分析し、どの機能がどの程度使われているかを把握するために導入を検討
-  - RevenueCat
-    - 課金の管理を効率化するために導入を検討
+- テストコードの拡充
+  - jest の基盤は入ったが、テストはまだ少ないので増やしていく
 
 
 ## 9. このプロジェクトで得た経験 → 業務での再現性

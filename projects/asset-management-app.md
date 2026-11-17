@@ -1,35 +1,35 @@
-# Yarikuri — Excelで運用していた個人資産管理を Next.js + Supabase で再構築 <!-- omit in toc -->
+# 資産管理アプリ — Excelで運用していた個人資産管理を Next.js + Supabase で再構築 <!-- omit in toc -->
 
 [![Status](https://img.shields.io/badge/Status-開発中-yellow?style=for-the-badge)](#)
 [![Stack](https://img.shields.io/badge/Stack-Next.js%20%2B%20Supabase-2ea44f?style=for-the-badge)](#)
 
-**Excelで長年運用していた個人資産管理ツール「Yarikuri」**を、Next.js + Supabase でWebアプリ化するプロジェクト。固定費・収入履歴・資産推移の3軸で家計を可視化することを目的とします。**現在開発中**で、Build in Public 方針でウェイトリストを先行受付しながら進めています。
+**Excelで長年運用していた個人資産管理ツール**を、Next.js + Supabase でWebアプリ化するプロジェクト。固定費・収入履歴・資産推移の3軸で家計を可視化することを目的とします。**現在開発中**で、LPでウェイトリストを先行受付しながら進めています。最初のリリースは支出の管理から。収入・資産はその後に対応します。
 
-> このREADMEは「Yarikuri で何を考え、どう作るか」を採用担当者・他エンジニアに向けて伝えることを目的にしています。リポジトリ自体はprivate管理のため、ここでは設計・技術選定の意思決定を中心に記載します。
+> このREADMEは「このアプリで何を考え、どう作るか」を採用担当者・他エンジニアに向けて伝えることを目的にしています。リポジトリ自体はprivate管理のため、ここでは設計・技術選定の意思決定を中心に記載します。
 
 - [1. なぜ作るか — Excel運用の限界とWebアプリ化の動機](#1-なぜ作るか--excel運用の限界とwebアプリ化の動機)
   - [個人開発の中での位置づけ](#個人開発の中での位置づけ)
-  - [開発状況：Build in Public + ウェイトリスト先行](#開発状況build-in-public--ウェイトリスト先行)
+  - [開発状況：ウェイトリスト先行](#開発状況ウェイトリスト先行)
 - [2. 解決したい課題と機能の対応](#2-解決したい課題と機能の対応)
   - [固定費・定期支出の管理](#固定費定期支出の管理)
   - [収入履歴の管理](#収入履歴の管理)
   - [資産トラッキング](#資産トラッキング)
   - [各種集計・グラフ](#各種集計グラフ)
+  - [複数通貨（8通貨）](#複数通貨8通貨)
   - [PWA でPC・スマホ両対応](#pwa-でpcスマホ両対応)
   - [Supabase Auth + RLS でデータ分離](#supabase-auth--rls-でデータ分離)
 - [3. 技術選定の理由](#3-技術選定の理由)
   - [フロント — Next.js（App Router） + React + Tailwind](#フロント--nextjsapp-router--react--tailwind)
   - [言語 — TypeScript（strict + `noUncheckedIndexedAccess`）](#言語--typescriptstrict--nouncheckedindexedaccess)
   - [PWA — `@serwist/next`](#pwa--serwistnext)
-  - [LP — Astro + Tailwind + Cloudflare Workers + Static Assets](#lp--astro--tailwind--cloudflare-workers--static-assets)
+  - [LP — Astro + Tailwind + Cloudflare Pages](#lp--astro--tailwind--cloudflare-pages)
   - [バックエンド — Supabase 完結（services/ なし）](#バックエンド--supabase-完結services-なし)
   - [DB — PostgreSQL（Supabase）](#db--postgresqlsupabase)
   - [認証 — Supabase Auth + SSR（`@supabase/ssr`）](#認証--supabase-auth--ssrsupabasessr)
-  - [ホスティング（app） — AWS Amplify Hosting](#ホスティングapp--aws-amplify-hosting)
-  - [ホスティング（LP） — Cloudflare Workers + Static Assets](#ホスティングlp--cloudflare-workers--static-assets)
+  - [ホスティング（app） — Cloudflare Workers（OpenNext）](#ホスティングapp--cloudflare-workersopennext)
+  - [ホスティング（LP） — Cloudflare Pages + Pages Functions](#ホスティングlp--cloudflare-pages--pages-functions)
   - [モノレポ — pnpm + Turborepo](#モノレポ--pnpm--turborepo)
   - [ウェイトリスト — Loops.so + Supabaseミラー](#ウェイトリスト--loopsso--supabaseミラー)
-  - [環境変数 — `astro:env`](#環境変数--astroenv)
 - [4. 設計で意識していること](#4-設計で意識していること)
   - [4.1 「Supabase完結（services/なし）」と決めた根拠](#41-supabase完結servicesなしと決めた根拠)
   - [4.2 複雑処理の置き場所を3階層で整理](#42-複雑処理の置き場所を3階層で整理)
@@ -57,41 +57,40 @@
 
 ### 個人開発の中での位置づけ
 
-trecord（モバイル × AWS）・nomow（モバイル × オフライン）・pomo（モバイル × 軽量）に続く第4作で、**Web × Supabase完結スタック** を選択。
+trecord（モバイル × AWS。Supabase へ移行中）・nomow（モバイル × オフライン）・pomo（モバイル × 軽量）に続く第4作で、**Web × Supabase完結スタック** を選択。
 
 意図的に違う技術構成にすることで、自分の技術スタックの幅を広げる検証も兼ねています。
 
-### 開発状況：Build in Public + ウェイトリスト先行
+### 開発状況：ウェイトリスト先行
 
 本アプリは現在開発中で、以下の方針で進めています：
 
 - **LPを先行公開** してウェイトリスト受付を開始
-- 開発進捗を **X（旧Twitter） + ウェイトリストメール** で定期発信
-- β版完成時に **ウェイトリスト登録者へ先行招待**
-- 正式リリース時に **X + waitlist + Product Hunt** で発表
-
-> 「**作って終わり**」ではなく「**作る過程を見せる**」ことで、思考プロセス自体を見てもらえる個人開発を目指しています。
+- 公開時に **ウェイトリスト登録者へ案内**
 
 
 ## 2. 解決したい課題と機能の対応
 
-> 現在は開発中です。下記は今後の予定も含めた **設計・実装中の機能** です（DB設計は完了、テーブル作成・画面実装はこれから）。
+> 現在は開発中です。支出まわり（ダッシュボード・支出一覧・グラフ・マスタ管理・設定・退会）は実装済みで、収入・資産はこれからです。DB は migration で管理しています。
 
 ### 固定費・定期支出の管理
-固定費・サブスクの全体像が把握できない課題に対し、サブスク・公共料金などの **固定費・定期支出の管理** を提供予定。
+固定費・サブスクの全体像が把握できない課題に対し、サブスク・公共料金などの **固定費・定期支出の管理** を実装済み。
 
-また、今月のカード支払いがどのくらいか・口座引き落としなど含めた全体はどのくらいかなど、**出ていったお金ではなく出ていくお金を管理**する仕組みを提供予定。
+また、今月のカード支払いがどのくらいか・口座引き落としなど含めた全体はどのくらいかなど、**出ていったお金ではなく出ていくお金を管理**する仕組み（引落カレンダー・今月の引落リスト）を実装済み。
 
 ### 収入履歴の管理
-収入の月次推移が分かりづらい課題に対し、給与明細レベルの **収入履歴の管理** を提供予定。
+収入の月次推移が分かりづらい課題に対し、給与明細レベルの **収入履歴の管理** を提供予定（未着手）。
 
 ### 資産トラッキング
-資産（投信 / 暗号資産 / 貯金）の全体推移が分散している課題に対し、定期スナップショットによる **資産トラッキング** を提供予定。
+資産（投信 / 暗号資産 / 貯金）の全体推移が分散している課題に対し、定期スナップショットによる **資産トラッキング** を提供予定（未着手）。
 
 また、収入に対してどれくらい貯金・積み立てできているか（いわゆる貯蓄率）なども算出し、推移を可視化する仕組みを提供予定。
 
 ### 各種集計・グラフ
-分類別 / 引落先別の集計が手動でしんどい課題に対し、**分類別・引落先別・推移などの集計グラフ** を提供予定。
+分類別 / 引落先別の集計が手動でしんどい課題に対し、支出の **分類別・引落先別の集計グラフ** を実装済み。推移などのグラフは収入・資産とあわせて提供予定。
+
+### 複数通貨（8通貨）
+外貨建ての支払いも管理したい課題に対し、**8通貨と為替レートの自動取得**（Supabase Edge Function）を実装済み。円換算で表示します。
 
 ### PWA でPC・スマホ両対応
 PCでもスマホでも見たい課題に対し、**PWA**（`@serwist/next`）でアプリライクに利用可能にする。
@@ -117,8 +116,8 @@ PCでもスマホでも見たい課題に対し、**PWA**（`@serwist/next`）�
 - **理由**：Next.js 公式推奨のService Worker構成
 - **比較検討**：next-pwa（メンテ停滞気味）
 
-### LP — Astro + Tailwind + Cloudflare Workers + Static Assets
-- **理由**：SEO + 初回表示速度 / 静的サイトで無料運用 / Cloudflare WorkersでAPIルートだけ動的化
+### LP — Astro + Tailwind + Cloudflare Pages
+- **理由**：SEO + 初回表示速度 / 静的サイトで無料運用 / ウェイトリストのAPIだけ Pages Functions で動的化
 - **比較検討**：Next.js（LPには重い）
 
 ### バックエンド — Supabase 完結（services/ なし）
@@ -130,28 +129,24 @@ PCでもスマホでも見たい課題に対し、**PWA**（`@serwist/next`）�
 - **比較検討**：DynamoDB / SQLite
 
 ### 認証 — Supabase Auth + SSR（`@supabase/ssr`）
-- **理由**：JWT発行・検証・SNSログイン（Google / Apple / Facebook）まで標準
+- **理由**：JWT発行・検証・SNSログインまで標準（今は Google ログインのみ。Apple などは後から足せる）
 - **比較検討**：Auth0 / Firebase Auth
 
-### ホスティング（app） — AWS Amplify Hosting
-- **理由**：Next.jsのSSR対応 / 自動ビルド / Vercel Hobbyの商用利用NG問題を回避
-- **比較検討**：Vercel Pro $20 / Cloudflare Pages
+### ホスティング（app） — Cloudflare Workers（OpenNext）
+- **理由**：`@opennextjs/cloudflare` で Next.js の SSR を Node.js 互換ランタイムで動かせる / 商用利用に制限なし / LP と同じ Cloudflare に集約できる / git push で自動デプロイ
+- **比較検討**：AWS Amplify Hosting（当初の予定。従量課金が読みづらく AWS にロックインされる）/ Vercel（Hobby は商用利用不可）/ Netlify
 
-### ホスティング（LP） — Cloudflare Workers + Static Assets
-- **理由**：`@astrojs/cloudflare` の統合Workersモデルで配信 / 無料枠で十分
-- **比較検討**：Cloudflare Pages
+### ホスティング（LP） — Cloudflare Pages + Pages Functions
+- **理由**：Astro の静的出力を GitHub 連携でそのまま配信 / ウェイトリストのAPIは Pages Functions（`functions/api/waitlist.ts`）にして、SSR アダプタ（`@astrojs/cloudflare`）を使わずに済ませる
+- **比較検討**：Cloudflare Workers + `@astrojs/cloudflare`
 
 ### モノレポ — pnpm + Turborepo
-- **理由**：`@yarikuri/shared` で型流通 / Trecordで確立した構成を踏襲
+- **理由**：共有パッケージ（`packages/shared`）で型流通 / Trecordで確立した構成を踏襲
 - **比較検討**：Nx
 
 ### ウェイトリスト — Loops.so + Supabaseミラー
 - **理由**：SaaS特化で実装コスト低 / バックアップとしてSupabaseにINSERT
 - **比較検討**：Beehiiv / Kit / 自作
-
-### 環境変数 — `astro:env`
-- **理由**：サーバー / クライアント / 機密 / 公開 を **型で分離**
-- **比較検討**：`import.meta.env` 直接利用
 
 
 ## 4. 設計で意識していること
@@ -194,14 +189,14 @@ Hono を挟むメリット（N+1解消 / キャッシュ層 / 重いデータ変
 
 ```
 apps/
-├── web/       — Yarikuri本アプリ（Next.js + PWA）
+├── web/       — 本アプリ（Next.js + PWA）
 └── website/   — マーケティング/LPサイト（Astro）
 ```
 
 LPとアプリを **意図的に別ビルド・別ホスティング** に分けています：
 
 - **LPはSEO / 初回表示速度が命** → 静的サイト（Astro）が正解。Next.jsに統合すると速度面で不利
-- **ホスティングコスト**: Cloudflare Workers（LP / 無料）+ Amplify（App）の方が安く済む
+- **ホスティングコスト**: Cloudflare Pages（LP / 無料）+ Cloudflare Workers（App）の方が安く済む
 - **Notion / Linear / Figma** など主要SaaSも同じ構成（marketingサイトとappが別ビルド）
 
 > 「**LPと本アプリを分離する**」判断は、業務でも **マーケティング部門と開発部門の責務分離** の議論にそのまま接続できます。
@@ -234,40 +229,37 @@ LPとアプリを **意図的に別ビルド・別ホスティング** に分け
 ## 6. 運用で見ること（リリース後）
 
 - **Supabase ダッシュボード**：DB使用量（無料枠500MB）、API呼び出し数、Auth登録数
-- **AWS Amplify Hosting**：ビルド失敗、月次コスト
-- **Cloudflare Workers**：LP のリクエスト数（無料枠100K/日）
+- **Cloudflare Workers**：本アプリのビルド失敗、リクエスト数
+- **Cloudflare Pages**：LP・ウェイトリストAPI（Pages Functions）のリクエスト数（無料枠100K/日）
 - **Loops.so 分析**：ウェイトリスト登録数、開封率
-- **エラー監視**：<!-- TODO: Sentry等の導入を予定 -->
+- **エラー監視**：Sentry 等の導入を予定
 
 
 ## 7. テスト・品質担保の方針
 
 - **型チェック**：TypeScript strict + `noUncheckedIndexedAccess`
 - **Lint / Format**：ESLint 9 (flat config) + Prettier、pre-commit で自動実行（husky + lint-staged）
-- **CI**：現状は未整備。型チェック・Lint・ビルドは **ローカル + pre-commit** で担保。GitHub Actions での自動化は今後導入予定
-- **RLS テスト**：<!-- TODO: Supabase migrations にRLSテストSQLを同梱予定 -->
+- **CI**：PR ごとに test・lint・typecheck と Edge Function の Deno テストを GitHub Actions で実行（`.github/workflows/ci.yml`）
+- **RLS テスト**：pgTAP で RLS のテストを書いている（`infra/supabase/tests/`）
 - **マイグレーション管理**：`infra/supabase/migrations/<YYYYMMDDHHMMSS>_<name>.sql` 形式、RLSポリシーも同ファイル内に記述
 
 
 ## 8. 今後やること
 
-- **LP実装**：Astro + Tailwind + Cloudflare Pages
-  - まずLPから作ることで、Build in publicで過程も見せつつ集客もしていく
-- **MVP実装**（フェーズ1）：自分用として固定費・収入・資産の3軸を入力・可視化できる状態まで
-- **β版招待**：ウェイトリスト登録者へ先行招待
-- **正式リリース**：X / Product Hunt 発表
-- **フェーズ2（収益化）**：Stripe Checkout で課金機能を追加（Supabase Edge Functions で Webhook受信）
-- **複数通貨対応**：暗号資産含む、為替レートAPI連携（Edge Functions + CRON）
-- **データインポート**：既存のExcelからのインポート機能
+- **支出の管理を仕上げる**：自分用として使いながら、設定画面と多言語対応（8言語）を仕上げる
+  - 自分の Excel のデータを移す移行スクリプトは作成済み（一般向けのインポート機能ではない）
+- **課金**：Stripe Checkout で課金機能を追加（Supabase Edge Functions で Webhook受信）。設計は済み・実装はこれから
+- **一般公開**：課金を入れた状態で公開し、ウェイトリスト登録者へ案内
+- **収入・資産**：収入履歴・資産トラッキングを追加し、固定費・収入・資産の3軸を入力・可視化できる状態へ
 
 
 ## 9. このプロジェクトで得ている経験 → 業務での再現性
 
 - **「自前で書く前にマネージドサービスで詰める」意思決定プロセス**：Supabase完結 vs 自前API の比較を、コスト・レイテンシ・DXの3軸で明文化した経験は、業務での **マネージド vs 自前 vs OSS** の議論にそのまま使えます
 - **将来の複雑処理の置き場所を3階層で先に決めておく設計**：「DB RPC → Edge Functions → API Routes」の優先順位は、業務でも **マイクロサービス境界・処理の責務分離** の議論に応用できる
-- **LP / 本アプリを分離する判断とコスト最適化**：Cloudflare Workers + Amplify Hostingの組合せで月額をミニマムに抑える経験は、事業会社の **インフラコスト最適化** に直結
-- **Build in Public による開発の透明化**：意思決定の過程を公開する経験は、業務での **設計判断のドキュメント化・ステークホルダー共有** にそのまま接続
-- **型安全な環境変数管理（`astro:env`）と Cloudflare Workers 統合 Workers モデルの構築**：Next.js / Astro / Workersといった **比較的新しい技術スタック** を、本番を見据えて適切に組み合わせる経験（LPは公開済み、本アプリは構築中）
+- **LP / 本アプリを分離する判断とコスト最適化**：Cloudflare Pages（LP）+ Cloudflare Workers（本アプリ）の組合せで月額をミニマムに抑える経験は、事業会社の **インフラコスト最適化** に直結
+- **設計判断を記録して公開する**：このページのように意思決定の過程を残して公開する経験は、業務での **設計判断のドキュメント化・ステークホルダー共有** にそのまま接続
+- **Cloudflare Workers（OpenNext）と Pages Functions の構築**：Next.js / Astro / Cloudflare といった **比較的新しい技術スタック** を、本番を見据えて適切に組み合わせる経験（LPは公開済み、本アプリは構築中）
 
 
 ---
@@ -276,9 +268,9 @@ LPとアプリを **意図的に別ビルド・別ホスティング** に分け
 ## 10. プロジェクトの構成（概要）
 
 ```
-yarikuri/
+<repo>/
 ├── apps/
-│   ├── web/        — Yarikuri 本アプリ（Next.js + Tailwind + PWA）
+│   ├── web/        — 本アプリ（Next.js + Tailwind + PWA）
 │   └── website/    — マーケティング/LPサイト（Astro + Tailwind）
 ├── packages/
 │   └── shared/     — 共有の型・ユーティリティ

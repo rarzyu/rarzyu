@@ -4,7 +4,7 @@
 [![Google Play](https://img.shields.io/badge/Google%20Play-414141?style=for-the-badge&logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.rarzyu.trecord)
 [![Website](https://img.shields.io/badge/LP-trecord.rarzyu.com-2ea44f?style=for-the-badge)](https://trecord.rarzyu.com/ja/)
 
-毎日のトレーニング内容と体重を記録し、グラフで成長を可視化、SNSでシェアできる画像も自動生成する個人開発アプリ。React Native + Express(AWS Lambda) + RDS(PostgreSQL) のフルスタック構成を1人で設計・実装・運用しています。
+毎日のトレーニング内容と体重を記録し、グラフで成長を可視化、SNSでシェアできる画像も自動生成する個人開発アプリ。React Native + Hono(AWS Lambda) + RDS(PostgreSQL) のフルスタック構成を1人で設計・実装・運用しています。
 
 > このREADMEは「Trecord で何を考え、どう作ったか」を採用担当者・他のエンジニアに向けて伝えることを目的にしています。リポジトリ自体はprivate管理のため、ここでは設計・運用の意思決定を中心に記載します。
 
@@ -20,7 +20,7 @@
   - [モバイル — React Native (Expo) + TypeScript](#モバイル--react-native-expo--typescript)
   - [モバイル状態管理 — React Context + TanStack Query](#モバイル状態管理--react-context--tanstack-query)
   - [モバイルフォーム — React Hook Form + Yup](#モバイルフォーム--react-hook-form--yup)
-  - [API — Express on AWS Lambda（`@vendia/serverless-express`）](#api--express-on-aws-lambdavendiaserverless-express)
+  - [API — Hono on AWS Lambda（`hono/aws-lambda`）](#api--hono-on-aws-lambdahonoaws-lambda)
   - [DB — PostgreSQL (Amazon RDS) + Prisma](#db--postgresql-amazon-rds--prisma)
   - [認証 — Amazon Cognito + AWS Amplify](#認証--amazon-cognito--aws-amplify)
   - [インフラ管理 — AWS CDK （TypeScript）](#インフラ管理--aws-cdk-typescript)
@@ -29,7 +29,7 @@
   - [多言語対応 — i18next（モバイル）/ 独自i18n + `getStaticPaths`（Astro）](#多言語対応--i18nextモバイル-独自i18n--getstaticpathsastro)
   - [モノレポ — pnpm + Turborepo](#モノレポ--pnpm--turborepo)
   - [CI/CD — GitHub Actions（`dev.yaml` / `prod.yaml`）](#cicd--github-actionsdevyaml--prodyaml)
-  - [広告 / 課金 — AdMob + `react-native-iap`](#広告--課金--admob--react-native-iap)
+  - [広告 / 課金 — AdMob + RevenueCat（`react-native-purchases`）](#広告--課金--admob--revenuecatreact-native-purchases)
 - [4. 設計で意識したこと](#4-設計で意識したこと)
   - [4.1 共有パッケージ（`/shared`）で型を一元化](#41-共有パッケージsharedで型を一元化)
   - [4.2 ドメインモデル：5つの入力パターン](#42-ドメインモデル5つの入力パターン)
@@ -104,10 +104,10 @@ SNSシェア時の画像加工が面倒・自己ベストの気付きが弱い�
 - **比較検討**：
   - Formik / 自前
 
-### API — Express on AWS Lambda（`@vendia/serverless-express`）
+### API — Hono on AWS Lambda（`hono/aws-lambda`）
 - **理由**：
-  - Expressで実装しつつ、Lambdaで「使った分だけ課金」に 
-    - Expressは別（Hono等）への移行を検討中
+  - Honoで実装しつつ、Lambdaで「使った分だけ課金」に 
+    - 2026-05 に Express（`@vendia/serverless-express`）から Hono + `@hono/zod-openapi` へ移行。各コントローラに手書きしていたバリデーションを zod スキーマに一本化し、手書きだった OpenAPI の定義も自動生成に切り替えた
   - API Gateway HTTP API v2でJWT検証を委譲
 - **比較検討**：
   - Java等
@@ -120,8 +120,11 @@ SNSシェア時の画像加工が面倒・自己ベストの気付きが弱い�
   - Prismaで型生成・マイグレーション・query builderが揃う
 - **比較検討**：
   - DynamoDB：複雑な集計が辛い
-  - Supabase：AWS統合のしやすさを優先して見送り
+  - Supabase：当初はAWS統合のしやすさを優先して見送ったが、現在は移行中（下記）
   - Aurora：コストが高い 
+- **Supabase への移行（進行中）**：
+  - VPC まわり（RDS・NAT Instance・踏み台）の固定費が今の規模には過剰なため、AWS（RDS・Cognito・NAT・VPC）から Supabase へ段階的に移行中
+  - DB の土台（migration・pgTAP・CI のチェック）は導入済み。DB の切替・認証の切替・AWS の撤去はこれから
 
 ### 認証 — Amazon Cognito + AWS Amplify
 - **理由**：
@@ -129,6 +132,7 @@ SNSシェア時の画像加工が面倒・自己ベストの気付きが弱い�
   - Google / Facebook / Apple のSNSログインを拡張容易
 - **比較検討**：
   - Firebase Auth：AWSとの統合のしやすさを優先して見送り
+- **今後**：Supabase への移行で置き換える予定
 
 ### インフラ管理 — AWS CDK （TypeScript）
 - **理由**：
@@ -148,6 +152,7 @@ SNSシェア時の画像加工が面倒・自己ベストの気付きが弱い�
 - **比較検討**：
   - NAT Gateway：運用は楽だが高い
   - ElasticIP：DB接続のためだけにコストがかかるのは厳しいと感じて見送った
+- **今後**：Supabase への移行で置き換える予定
 
 ### Webサイト — Astro + Tailwind + Cloudflare Pages
 - **理由**：
@@ -174,11 +179,11 @@ SNSシェア時の画像加工が面倒・自己ベストの気付きが弱い�
 - **比較検討**：
   - CodeCommit / CodePipeline：AWSに統合できるが、コストなどを考えるとGitHub Actionsで十分
 
-### 広告 / 課金 — AdMob + `react-native-iap`
+### 広告 / 課金 — AdMob + RevenueCat（`react-native-purchases`）
 - **理由**：
   - Free
-  - 有料プランの **広告 ON/OFF切り替え** がCSの基本要件
-  - IAPでApple・Googleそれぞれのストア課金に対応
+  - 有料プランは **広告なし + グラフで見られる期間が広がる**
+  - IAPでApple・Googleそれぞれのストア課金に対応し、購入状態は RevenueCat で管理
 
 
 ## 4. 設計で意識したこと
@@ -219,11 +224,11 @@ import { datetimeUtil, enumUtil } from '@trecord/shared';
 | ルート | 認証 | 検証の置き場 | 用途 |
 | --- | --- | --- | --- |
 | `/v1/*` | 必須 | **API Gateway層**（HttpJwtAuthorizer） | ログイン後の全API |
-| `/public/*` | 不要 | **Express層**（APIキー + レート制限 100req/15min） | アプリ情報（最新バージョン）など、ログイン前にも必要なAPI |
+| `/public/*` | 不要 | **Hono層**（APIキー + レート制限 100req/15min） | アプリ情報（最新バージョン）など、ログイン前にも必要なAPI |
 
 JWT検証をAPI Gateway層に寄せることで、Lambdaコールドスタート時の **Cognito JWKS取得コストを排除** しています。
 
-一方、Public API側はAPIキー＋レート制限をExpress層で実装し、両ルートで適切な負荷対策を効かせています。
+一方、Public API側はAPIキー＋レート制限をHono層で実装し、両ルートで適切な負荷対策を効かせています。
 
 ### 4.4 インフラ：守りつつ節約する設計
 
@@ -234,6 +239,7 @@ JWT検証をAPI Gateway層に寄せることで、Lambdaコールドスタート
   - NAT Gateway（$30/月）の1/10
 - **S3 は VPC Gateway Endpoint（無料）** 経由でアクセスし、NATを経由しない
 - **EC2踏み台 + SSHポートフォワード** でDB接続（開発時のみ）
+- いずれも Supabase への移行で置き換える予定
 
 > 個人開発でこそ「**運用コスト・セキュリティ・運用性のバランス**」を最後まで自分で意思決定できるのが価値だと考えています。
 
@@ -269,27 +275,22 @@ JWT検証をAPI Gateway層に寄せることで、Lambdaコールドスタート
 ## 7. テスト・品質担保
 
 - **型チェック**：`pnpm typecheck`（Turbo経由で全ワークスペースを並列実行）
-- **Lint / Format**：ESLint + Prettier で統一（実行は手動 / CI）
+- **Lint / Format**：ESLint + Prettier で統一（PR ごとに CI で実行）
   - pre-commitフック（husky）は依存（`pnpm-lock.yaml`）変更時にライセンス情報を再生成
+- **テスト / CI**：API は vitest、モバイルは jest でテストを書き、PR ごとに lint・型チェック・テストを GitHub Actions（`.github/workflows/ci.yml`）で実行
 - **手動テスト**：ストア提出前のチェックリスト（5つの入力パターン × プラン × 8言語の組合せ要点を確認）をテンプレート化
   - リリース前に実機で一通りのパターンを確認する運用
 
-> ユニットテストは現状ほぼ未整備ですが、実装予定です
+> モバイルのテストはまだ少ないので、今後増やしていく予定です
 
 
 ## 8. 今後改善したいこと
 
 - Web版の作成
   - もともと管理していたデータがあるが、いちいち入力するのも大変なので、Web版を作成し、そこでインポート/エクスポート機能を実装し、別アプリからの移行をスムーズにしたい
-- Express → Hono など、より軽量なフレームワークへの移行
-- テストコードの実装
+- テストコードの拡充
   - 品質の担保のためにも、テストコードを実装する
   - 特にAPIはほとんどがテストコードできるロジックなので、ユニットテストを充実させたい
-- ツールの導入
-  - PostHog
-    - ユーザーの行動を分析し、どの機能がどの程度使われているかを把握するために導入を検討
-  - RevenueCat
-    - 課金の管理を効率化するために導入を検討
 
 
 ## 9. このプロジェクトで得た経験 → 業務での再現性
@@ -303,7 +304,7 @@ JWT検証をAPI Gateway層に寄せることで、Lambdaコールドスタート
 - **個人開発の0 → 1 → 運用までを1人で完結**：
   - 要件定義 → 設計 → 実装 → ストア公開 → ユーザー対応 → 機能追加 までのフルサイクル経験
 - **既存システムの保守改善の業務経験（SES）と接続**：
-  - 直近のDify / AIツール案件で培った「**既存仕様 / 既存コードを読み解いて、保守性・安全性・運用性を意識しながら段階的に改善する**」アプローチを、自分のプロダクトに対しても同じ温度感で適用しています
+  - 業務で培った「**既存仕様 / 既存コードを読み解いて、保守性・安全性・運用性を意識しながら段階的に改善する**」アプローチを、自分のプロダクトに対しても同じ温度感で適用しています
 
 ---
 
@@ -316,7 +317,7 @@ trecord/
 │   ├── web             Webアプリ（将来用）
 │   └── website         Astro + Tailwind サイト（8言語）
 ├── services/
-│   └── api             Express API（AWS Lambda）
+│   └── api             Hono API（AWS Lambda）
 ├── packages/
 │   └── shared          共有の型定義・ユーティリティ
 ├── infra/

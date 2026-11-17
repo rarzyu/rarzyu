@@ -7,7 +7,7 @@
         - [Trecord](#trecord)
         - [pomo](#pomo)
         - [nomow](#nomow)
-        - [Yarikuri（開発中）](#yarikuri開発中)
+        - [資産管理アプリ（開発中）](#資産管理アプリ開発中)
     - [Blog](#blog)
 - [🧭 全体を通して意識していること](#-全体を通して意識していること)
 - [🛠 Language,Skills](#-languageskills)
@@ -26,7 +26,7 @@
 日々のトレーニングと体重を記録、グラフで成長を可視化、SNSシェア用画像も自動生成する筋トレ記録アプリ。
 
 - **技術スタック**: 
-    - React Native / Express(Lambda) / RDS(PostgreSQL) / Cognito / CDK / Astro
+    - React Native / Hono(Lambda) / RDS(PostgreSQL) / Cognito / CDK / Astro（AWS から Supabase へ段階的に移行中）
 - **リンク**: 
     - [📄 詳細](projects/Trecord.md)
     - [App Store](https://apps.apple.com/app/id6754829217)
@@ -57,16 +57,16 @@
     - [Google Play](https://play.google.com/store/apps/details?id=com.rarzyu.supplement_to_do)
     - [Webサイト](https://nomow.rarzyu.com/ja/)
 
-#### Yarikuri（開発中）
+→ ストアで公開中のアプリは [rarzyu.com/projects/](https://rarzyu.com/projects/) でも紹介しています。
 
-Excel運用していた個人資産管理ツールをNext.js + Supabaseで再構築。
+#### 資産管理アプリ（開発中）
+
+Excelで運用していた家計・資産管理を Webアプリとして作り直しています（まずは支出の管理から）。
 
 - **技術スタック**:
-    - Next.js / Supabase / PWA
+    - Next.js / Supabase / Cloudflare Workers / PWA
 - **リンク**:
-    - [📄 詳細](projects/Yarikuri.md)
-
-→ 一般向けの紹介ページは [rarzyu.com/projects/](https://rarzyu.com/projects/) でも公開しています。
+    - [📄 詳細](projects/asset-management-app.md)
 
 ### Blog
 
@@ -77,6 +77,7 @@ Excel運用していた個人資産管理ツールをNext.js + Supabaseで再構
 - プログラミングチュートリアル
 - 個人開発のノウハウ
 - FIRE戦略・資産形成
+- ガジェット・デスク環境のレビュー
 
 
 ## 🧭 全体を通して意識していること
@@ -87,17 +88,19 @@ Excel運用していた個人資産管理ツールをNext.js + Supabaseで再構
 - **業務で使う技術を、業務に持ち込めるレベルで運用しきる**：個人開発を「お試し」にせず、ストア公開・本番運用・ユーザー対応まで通す
 - **保守性・安全性・運用性のバランスを最後まで自分で握る**：個人開発はインフラ・コスト・セキュリティの判断を1人で完結できるのが価値だと考えている
 - **型安全性で守る設計**：TypeScript + 共有パッケージで型を流通させ、変更時の追従漏れをコンパイル時に検出する
-- **既存仕様 / 既存コードを読み解いて段階的に改善する**：SES業務で培ったアプローチを、自分のプロダクトにも同じ温度感で適用
+- **既存仕様 / 既存コードを読み解いて段階的に改善する**：業務で培ったアプローチを、自分のプロダクトにも同じ温度感で適用
 
 
 ## 🛠 Language,Skills
 
-|title|value|
-|--|--|
-|**language**|![language-icon](https://skillicons.dev/icons?i=html,css,js,ts,java,kotlin,swift,python,dart)|
-|**framework,library etc**|![framework-library-icon](https://skillicons.dev/icons?i=flutter,react,angular,spring,jquery)|
-|**infrastructure**|![infrastructure-icon](https://skillicons.dev/icons?i=aws)|
-|**tool etc**|![tool-icon](https://skillicons.dev/icons?i=github,gitlab,vscode,figma,notion)|
+| |個人開発で使用中|業務・過去の開発で使用|
+|--|--|--|
+|**language**|![language-icon](https://skillicons.dev/icons?i=ts,js,html,css,python)|![language-icon](https://skillicons.dev/icons?i=java,kotlin,swift,dart)|
+|**framework, library**|![framework-library-icon](https://skillicons.dev/icons?i=react,nextjs,astro,tailwind,nodejs)|![framework-library-icon](https://skillicons.dev/icons?i=flutter,angular,spring,jquery)|
+|**infrastructure, DB**|![infrastructure-icon](https://skillicons.dev/icons?i=aws,cloudflare,supabase,postgres)| |
+|**tool**|![tool-icon](https://skillicons.dev/icons?i=github,githubactions,sentry,pnpm,vscode,figma,notion)|![tool-icon](https://skillicons.dev/icons?i=gitlab)|
+
+モバイルは React Native（Expo）、API は Hono を使っています（アイコンが無いため文字で記載）。
 
 
 ## 📊 GitHub Activity

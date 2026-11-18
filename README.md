@@ -1,18 +1,44 @@
-## 👋 Hi! I'm rarzyu  <!-- omit in toc -->
-[![github-follower](https://komarev.com/ghpvc/?username=rarzyu)](https://github.com/rarzyu)
-[![twitter-follower](https://img.shields.io/twitter/follow/rarzyu1217?style=flat&logo=x)](https://x.com/rarzyu1217)
+<p align="center">
+  <!-- Typing SVG by DenverCoder1 - https://github.com/DenverCoder1/readme-typing-svg -->
+  <a href="https://github.com/DenverCoder1/readme-typing-svg">
+    <img alt="Hi, I'm rarzyu" src="https://readme-typing-svg.demolab.com/?lines=Hi%2C%20I%27m%20rarzyu;%E5%80%8B%E4%BA%BA%E9%96%8B%E7%99%BA%E3%81%A7%E3%82%A2%E3%83%97%E3%83%AA%E3%82%923%E6%9C%AC%E3%82%B9%E3%83%88%E3%82%A2%E5%85%AC%E9%96%8B%E4%B8%AD;React%20Native%20%2F%20Next.js%20%2F%20Supabase%20%2F%20Cloudflare;%E6%AF%8E%E9%80%B1%E3%83%96%E3%83%AD%E3%82%B0%E3%81%A7%E6%8A%80%E8%A1%93%E8%A8%98%E4%BA%8B%E3%82%92%E6%9B%B8%E3%81%84%E3%81%A6%E3%81%84%E3%81%BE%E3%81%99&font=Noto+Sans+JP&weight=600&size=22&duration=3500&pause=1000&color=2EA44F&center=true&vCenter=true&width=600&height=50" /></a>
+</p>
 
-- [📱 Products](#-products)
-    - [Projects（個人開発）](#projects個人開発)
-        - [Trecord](#trecord)
-        - [pomo](#pomo)
-        - [nomow](#nomow)
-        - [資産管理アプリ（開発中）](#資産管理アプリ開発中)
-    - [Blog](#blog)
-- [🧭 全体を通して意識していること](#-全体を通して意識していること)
-- [🛠 Language,Skills](#-languageskills)
-- [📊 GitHub Activity](#-github-activity)
-- [📬 Contact](#-contact)
+<p align="center">
+  <a href="https://x.com/rarzyu1217"><img alt="X" title="X (@rarzyu1217)" src="https://img.shields.io/badge/X-@rarzyu1217-000000?style=for-the-badge&logo=x&logoColor=white" /></a>
+  <a href="https://rarzyu.com"><img alt="Blog" title="らるじゅblog" src="https://img.shields.io/badge/Blog-rarzyu.com-2ea44f?style=for-the-badge&logo=rss&logoColor=white" /></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/rarzyu"><img alt="github-follower" src="https://komarev.com/ghpvc/?username=rarzyu" /></a>
+</p>
+
+<table><tr><td valign="top" width="50%">
+
+### 📝 ブログの新着
+<!-- blog:start -->
+[Gitのコミットは差分ではなくスナップショット｜中身を覗いて仕組みを理解](https://rarzyu.com/blog/it-programming/solo-development/git-commit-snapshot/) - 2026-11-16
+
+[【入門】依存性注入（DI）とは？「外から渡す」だけの設計をコードで解説](https://rarzyu.com/blog/it-programming/solo-development/dependency-injection/) - 2026-11-09
+
+[SSG・SSR・CSRの違いとは？HTMLをいつ・どこで作るかで整理](https://rarzyu.com/blog/it-programming/solo-development/ssg-ssr-csr-difference/) - 2026-11-02
+
+[【Astro】コードのシンタックスハイライト設定｜Shikiのテーマと行の強調](https://rarzyu.com/blog/it-programming/solo-development/astro-syntax-highlighting/) - 2026-10-26
+
+[【Astro】OGPの設定方法｜og:imageでSNSのカード表示を整える](https://rarzyu.com/blog/it-programming/solo-development/astro-ogp/) - 2026-10-19
+<!-- blog:end -->
+もっと読む → [rarzyu.com](https://rarzyu.com)
+</td><td valign="top" width="50%">
+
+### 📱 アプリの最新版（App Store）
+<!-- apps:start -->
+[**Trecord**](https://apps.apple.com/app/id6754829217) 1.5.0 - 2026-10-24
+
+[**pomo**](https://apps.apple.com/app/id6502401630) 2.2.0 - 2026-08-21
+
+[**nomow**](https://apps.apple.com/app/id6474133320) 2.1.0 - 2026-10-14
+<!-- apps:end -->
+</td></tr></table>
 
 
 ## 📱 Products
@@ -91,25 +117,36 @@ Excelで運用していた家計・資産管理を Webアプリとして作り�
 - **既存仕様 / 既存コードを読み解いて段階的に改善する**：業務で培ったアプローチを、自分のプロダクトにも同じ温度感で適用
 
 
-## 🛠 Language,Skills
+## 🛠 Language, Skills
 
-| |個人開発で使用中|業務・過去の開発で使用|
+| |メインで使っている|使った経験がある|
 |--|--|--|
 |**language**|![language-icon](https://skillicons.dev/icons?i=ts,js,html,css,python)|![language-icon](https://skillicons.dev/icons?i=java,kotlin,swift,dart)|
 |**framework, library**|![framework-library-icon](https://skillicons.dev/icons?i=react,nextjs,astro,tailwind,nodejs)|![framework-library-icon](https://skillicons.dev/icons?i=flutter,angular,spring,jquery)|
 |**infrastructure, DB**|![infrastructure-icon](https://skillicons.dev/icons?i=aws,cloudflare,supabase,postgres)| |
 |**tool**|![tool-icon](https://skillicons.dev/icons?i=github,githubactions,sentry,pnpm,vscode,figma,notion)|![tool-icon](https://skillicons.dev/icons?i=gitlab)|
 
-モバイルは React Native（Expo）、API は Hono を使っています（アイコンが無いため文字で記載）。
+業務と個人開発の両方を含みます。モバイルは React Native（Expo）、API は Hono を使っています（アイコンが無いため文字で記載）。
 
 
 ## 📊 GitHub Activity
 
-[![activity-graph](https://github-readme-activity-graph.vercel.app/graph?username=rarzyu&theme=github-dark-dimmed&count_private=true&custom_title=Contribution%20Graph%20in%20the%20last%2031%20days&hide_border=true)](https://github.com/Ashutosh00710/github-readme-activity-graph)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rarzyu/rarzyu/output/github-snake-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/rarzyu/rarzyu/output/github-snake.svg" />
+    <img alt="github-snake" src="https://raw.githubusercontent.com/rarzyu/rarzyu/output/github-snake.svg" />
+  </picture>
+</p>
 
-![summary-cards](https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=rarzyu&count_private=true&theme=tokyonight)
+<p align="center">
+  <a href="https://github.com/Ashutosh00710/github-readme-activity-graph"><img alt="activity-graph" src="https://github-readme-activity-graph.vercel.app/graph?username=rarzyu&theme=github-dark-dimmed&count_private=true&custom_title=Contribution%20Graph%20in%20the%20last%2031%20days&hide_border=true" /></a>
+</p>
 
+<p align="center">
+  <a href="https://github.com/DenverCoder1/github-readme-streak-stats"><img alt="streak-stats" src="https://streak-stats.demolab.com/?user=rarzyu&theme=tokyonight&hide_border=true" /></a>
+</p>
 
-## 📬 Contact
-- X (Twitter): [@rarzyu1217](https://x.com/rarzyu1217)
-- Blog: [rarzyu.com](https://rarzyu.com)
+<p align="center">
+  <img alt="languages" src="https://raw.githubusercontent.com/rarzyu/rarzyu/output/languages.svg" />
+</p>

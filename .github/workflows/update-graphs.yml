@@ -1,0 +1,62 @@
+name: Update graphs
+
+on:
+  schedule:
+    # 毎週火曜 JST 6:30
+    - cron: "30 21 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-graphs
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: 草を食べる蛇を作る
+        uses: Platane/snk/svg-only@d8f6715049803e982ee5ff501b6b9b7d5deeb09b # v3.5.0
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/github-snake.svg
+            dist/github-snake-dark.svg?palette=github-dark
+
+      - name: 使用言語の割合を作る
+        id: languages
+        continue-on-error: true
+        run: node scripts/update-languages.mjs dist/languages.svg
+        env:
+          LANGS_TOKEN: ${{ secrets.LANGS_TOKEN }}
+
+      - name: 作れなかったときは前回の使用言語の割合を残す
+        if: steps.languages.outcome == 'failure'
+        run: |
+          if git fetch --depth=1 origin output:refs/remotes/origin/output && git cat-file -e origin/output:languages.svg; then
+            git show origin/output:languages.svg > dist/languages.svg
+            echo "前回の languages.svg を残しました"
+          else
+            echo "前回の languages.svg はありません"
+          fi
+
+      - name: dist の中身を output ブランチへ push する
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          export GIT_INDEX_FILE="$RUNNER_TEMP/output-index"
+          git --work-tree=dist add --all
+          tree=$(git write-tree)
+          commit=$(git commit-tree "$tree" -m "グラフの自動更新（蛇・使用言語の割合）")
+          git push --force origin "$commit:refs/heads/output"
+
+      - name: 使用言語の割合が作れなかったら失敗にする
+        if: steps.languages.outcome == 'failure'
+        run: |
+          echo "::error::使用言語の割合を作れませんでした（LANGS_TOKEN の期限切れなど）。上の手順のログを見てください"
+          exit 1
